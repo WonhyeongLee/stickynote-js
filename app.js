@@ -1,5 +1,6 @@
     const app = document.querySelector("#app");
     const editorSection = document.createElement("section");
+    const memoSection = document.createElement("section");
     const divMemo = document.createElement("div");
     const divButton = document.createElement("div");
     const addButton = document.createElement("button");
@@ -11,6 +12,7 @@
     // productCard.setAttribute("class", "product-item");
 
     editorSection.setAttribute("class","wrap-edit");
+    memoSection.setAttribute("class","wrap-note");
     divMemo.setAttribute("class","div-memo");
     divButton.setAttribute("class","div-button");
     addButton.setAttribute("class","btn-add");
@@ -18,7 +20,6 @@
     saveButton.setAttribute("class","btn-save");
     addButton.setAttribute("type","button");
     deleteButton.setAttribute("type","button");
-    saveButton.setAttribute("type","button");
     txtEditArea.setAttribute("class","cont-editor");
     txtEditArea.setAttribute("contenteditable","true");
 
@@ -28,22 +29,25 @@
     divMemo.appendChild(txtEditArea);
     divButton.appendChild(addButton);
     divButton.appendChild(deleteButton);
-    divButton.appendChild(saveButton);
+    app.appendChild(memoSection);
 
     addButton.textContent = "추가"
     deleteButton.textContent = "삭제"
-    saveButton.textContent = "저장"
 
-    let todo = [];
+    let memos = [];
     let getMemo = function(){
 
     };
 
-    optionButton.addEventListener('click', ()=>{
-        if(textarea.value != ''){
-            console.log('비어있지않음');
-            localStorage.setItem(`메모${localStorage.length}`,text);
-            
-        }
-        getMemo();
+    // .wrap-edit .div-memo 의 추가 버튼을 누르면 저장과 동시에 wrap-note 영역에 memo를 생성합니다
+    // 저장버튼은 필요없어짐, 추가와 동시에 localStorage에 저장
+    addButton.addEventListener('click', ()=>{
+        // 나중에 모듈처럼 빼서 작성
+        console.log("addButton Clicked");
+        // 섹션의 클래스명만 다르고 나머지는 똑같으니까 함수하나로 묶어보자
+        memoSection.appendChild(divMemo);
     });
+
+    const saveMemo = function(txt){
+        console.log("localStorage에 메모 저장");
+    }
