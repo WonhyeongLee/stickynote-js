@@ -40,10 +40,7 @@
     // 로컬스토리지에 저장된 메모들을 불러오는 함수
     const loadMemo = function() {
         console.log(`loadMemo`);
-
-        for (let i of memos) {
-            console.log(i);
-        }
+        const memoList = localStorage.getItem(memos)
     }
 
     loadMemo();
@@ -70,11 +67,27 @@
         });
 
     const saveMemo = function(txt){
+        let newId = function (){
+            return Math.random().toString(36).substring(2,11);
+        }
         console.log("localStorage에 메모 저장");
+        console.log(`id : ${newId()}`);
         console.log(txt);
         localStorage.setItem(1,txt)
     }
 
     const clearMemo = function() {
         txtEditArea.textContent =''
+    }
+
+    class Memo {
+        constructor(id, value) {
+            this.memoId = id,
+            this.txt = value;
+        }
+
+        showMemoInfo(){
+            console.log(`ID : ${this.memoId}\n 
+                        TXT : ${this.txt}`);
+        }
     }
