@@ -6,7 +6,9 @@
     const deleteButton = document.createElement("button");
     const saveButton = document.createElement("button");
     const txtEditArea = document.createElement("div");
-
+    const buttons = document.getElementsByTagName("button");
+    // querySelectorAll 은 static collection 이라 나중에 생긴 메모의 버튼은 반영이 안되는 문제가 있었음. getElementsByTagName 으로 대체
+    // + cloneNode 로 복사한 노드들으 이벤트 까지 복사해주지는 않음
     // productCard.setAttribute("href", `/detail/${item.id}`);
     // productCard.setAttribute("class", "product-item");
 
@@ -31,24 +33,48 @@
 
     addButton.textContent = "추가"
     deleteButton.textContent = "삭제"
-
     let memos = [];
     let getMemo = function(){
 
     };
+    // 로컬스토리지에 저장된 메모들을 불러오는 함수
+    const loadMemo = function() {
+        console.log(`loadMemo`);
+
+        for (let i of memos) {
+            console.log(i);
+        }
+    }
+
+    loadMemo();
 
     // .wrap-edit .div-memo 의 추가 버튼을 누르면 저장과 동시에 wrap-note 영역에 memo를 생성합니다
-    // 저장버튼은 필요없어짐, 추가와 동시에 localStorage에 저장
-    addButton.addEventListener('click', ()=>{
+    
+    // document 로 했어야했는데 .......
+    document.addEventListener('click', (e)=>{
+        let btn = e.target.closest('button');
+        let memoTxt = txtEditArea.textContent;
+        if(!btn) return;
+        if(e.target.textContent === '추가'){
+            saveMemo(memoTxt);
+        }
+        if(e.target.textContent === '삭제'){
+            console.log('del');
+        }
+
         const memoSection = editorSection.cloneNode(true);
         memoSection.setAttribute("class","wrap-note");
         app.appendChild(memoSection);
-        // 나중에 모듈처럼 빼서 작성
-        console.log("addButton Clicked");
-        // 섹션의 클래스명만 다르고 나머지는 똑같으니까 함수하나로 묶어보자
-        console.log(memoSection);
-    });
+
+        clearMemo();
+        });
 
     const saveMemo = function(txt){
         console.log("localStorage에 메모 저장");
+        console.log(txt);
+        localStorage.setItem(1,txt)
+    }
+
+    const clearMemo = function() {
+        txtEditArea.textContent =''
     }
