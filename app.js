@@ -44,16 +44,24 @@
     loadMemo();
 
     // .wrap-edit .div-memo 의 추가 버튼을 누르면 저장과 동시에 wrap-note 영역에 memo를 생성합니다
-    function addMemo(id, txt) {
+    const addMemo = function(id, txt) {
         // const memos = getMemos();
         const memoId = id;
         const memoTxt = txt;
-        // const memoObject = {
-        //     content : `${txt}`
-        // };
+
         console.log(memoTxt);
         localStorage.setItem(`${memoId}`,memoTxt);
     }
+    /*
+<script>
+    area.value = localStorage.getItem('area');
+    area.oninput = () => {
+      localStorage.setItem('area', area.value)
+    };
+</script>
+
+*/
+
     // const contEditor = document.querySelector('.cont-editor');
     // contEditor.addEventListener('keydown', () => {
     //     console.log(contEditor);
@@ -72,29 +80,43 @@
             const memoSection = editorSection.cloneNode(true);
             memoSection.setAttribute("class","wrap-note");
             app.appendChild(memoSection);
-
             addMemo(newMemoId, memoTxt);
 
         }
         if(e.target.textContent === '삭제'){
             console.log('del');
             const targetId = e.target.closest('.div-memo');
-            // 클릭한 메모의 ID, 로컬스토리지에서 ID 값으로 제거 
-            console.log(targetId.id);
-            // 클릭한 메모 제거
-            console.log(targetId.parentElement);
-            // targetId.parentElement.remove();
+            
+            deleteMemo(targetId);
         }
 
         clearMemo();
-        });
+    });
 
-        document.addEventListener('keypress', (e)=>{
-            const txtArea = e.target.closest('div .cont-editor');
-            if(!txtArea) return;
-            console.log(txtArea);
-        })
+    document.addEventListener('input', (e)=>{
+        const txtArea = e.target.closest('div .div-memo');
+        const targetId = txtArea.id;
+        const targetTxt = txtArea.childNodes[1].textContent;
 
+        // 메모가 아닌 곳에 입력하면 null 반환
+        if(!txtArea) return;
+
+        // 처음 메모에 id가 저장되면서 밀리는 현상 처리
+        // 아이디가 있는 타겟만 정저장해줌 (첫 메모는 아이디를 가지지 않기 때문에)
+        if(targetId){
+            addMemo(targetId,targetTxt);
+        }else{
+            console.log('targetId 없음');
+        }
+
+    })
+    const deleteMemo = function(target) {
+        console.log(target.parentElement);
+        console.log(target.id);
+        console.log('deleteMemo');
+        localStorage.removeItem(target.id);
+        // targetId.parentElement.remove();
+    }
     const clearMemo = function() {
         txtEditArea.textContent = ''
     }
@@ -103,3 +125,4 @@
 
     }
 
+// 로컬스토리지에 저장된 메모 첫 로드시 불러오는 기능 추가햐ㅐ야함
