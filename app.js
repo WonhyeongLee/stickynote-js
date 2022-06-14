@@ -36,58 +36,46 @@
     deleteButton.textContent = "삭제"
 
     // 로컬스토리지에 저장된 메모들을 불러오는 함수
-    const loadMemo = function() {
-        console.log(`loadMemo`);
-        
+    window.onload = function() {
+        loadMemo();
     }
-
-    loadMemo();
+    const loadMemo = function() {
+        for(let i=0; i<localStorage.length; i++) {
+            let key = localStorage.key(i);
+            let memoTxt = localStorage.getItem(key);
+            console.log(`${key}: ${memoTxt}`);
+            createMemo(key,memoTxt);
+        }
+    }
+    
 
     // .wrap-edit .div-memo 의 추가 버튼을 누르면 저장과 동시에 wrap-note 영역에 memo를 생성합니다
     const addMemo = function(id, txt) {
         // const memos = getMemos();
         const memoId = id;
         const memoTxt = txt;
-
         console.log(memoTxt);
         localStorage.setItem(`${memoId}`,memoTxt);
     }
-    /*
-<script>
-    area.value = localStorage.getItem('area');
-    area.oninput = () => {
-      localStorage.setItem('area', area.value)
-    };
-</script>
 
-*/
-
-    // const contEditor = document.querySelector('.cont-editor');
-    // contEditor.addEventListener('keydown', () => {
-    //     console.log(contEditor);
-    // })
     document.addEventListener('click', (e)=>{
         const btn = e.target.closest('button');
         const memoTxt = txtEditArea.textContent;
-        if(!btn) return console.log('not btn');
+        if(!btn) return;
 
 
         if(e.target.textContent === '추가'){
             console.log(e.target);
+            // 랜덤id생성
             const newMemoId = Math.random().toString(36).substring(2,11);
-            divMemo.setAttribute("id",`${newMemoId}`);
-
-            const memoSection = editorSection.cloneNode(true);
-            memoSection.setAttribute("class","wrap-note");
-            app.appendChild(memoSection);
-            addMemo(newMemoId, memoTxt);
-
+            createMemo(newMemoId, memoTxt);
         }
         if(e.target.textContent === '삭제'){
             console.log('del');
             const targetId = e.target.closest('.div-memo');
-            
+            console.log(targetId);
             deleteMemo(targetId);
+            memoIds.pop(targetId)
         }
 
         clearMemo();
@@ -111,18 +99,27 @@
 
     })
     const deleteMemo = function(target) {
+        console.log('deleteMemo');
         console.log(target.parentElement);
         console.log(target.id);
-        console.log('deleteMemo');
-        localStorage.removeItem(target.id);
-        // targetId.parentElement.remove();
+        if(target.id){
+            localStorage.removeItem(target.id);
+            target.parentElement.remove();
+        }else {
+            console.log('');
+        }
     }
     const clearMemo = function() {
         txtEditArea.textContent = ''
     }
 
-    const createMemo = function() {
-
+    const createMemo = function(id,txt){
+        const memoSection = editorSection.cloneNode(true);
+        const memoTxtArea = memoSection.lastChild.childNodes[1]
+        memoSection.setAttribute("class","wrap-note");
+        memoTxtArea.textContent = txt
+        memoSection.childNodes[0].setAttribute("id",`${id}`)
+        app.appendChild(memoSection);
+        addMemo(id, txt);
     }
 
-// 로컬스토리지에 저장된 메모 첫 로드시 불러오는 기능 추가햐ㅐ야함
